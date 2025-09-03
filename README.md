@@ -99,7 +99,7 @@ npx prompt-guard-mcp
 
    **ALL AI ASSISTANTS MUST:**
 
-   1. Execute risk analysis FIRST - Call `   mcp_prompt-guard-mcp_vibe_guard_analyze_risk` before ANY action
+   1. Execute risk analysis FIRST - Call `prompt_guard_analyze_risk` before ANY action
    2. Follow actions EXACTLY - Never override returned actions
    3. NO EXCEPTIONS - Risk analysis is mandatory, not optional
    ```
@@ -112,7 +112,7 @@ Use GitHub Copilot Chat or similar and try:
 
 ```json
 {
-  "tool": "vibe_guard_analyze_risk",
+  "tool": "prompt_guard_analyze_risk",
   "parameters": {
     "operation": "Install lodash package via npm",
     "context": {
@@ -169,7 +169,7 @@ prompt-guard-mcp
 
 ## MCP Tools
 
-### vibe_guard_analyze_risk
+### prompt_guard_analyze_risk
 
 Analyzes the security risk of a proposed operation.
 
@@ -218,7 +218,7 @@ echo '{
 
 ```javascript
 // Example MCP client usage
-const result = await mcpClient.callTool("vibe_guard_analyze_risk", {
+const result = await mcpClient.callTool("prompt_guard_analyze_risk", {
   operation: "Download and execute script from internet",
   context: {
     url: "https://example.com/script.sh",
