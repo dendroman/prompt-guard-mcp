@@ -1,0 +1,54 @@
+{
+  "name": "prompt-guard-mcp",
+  "version": "1.0.0",
+  "description": "AI-powered security risk analysis via Model Context Protocol",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "prompt-guard-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Tests to be implemented\" && exit 1",
+    "lint": "echo \"Linting to be implemented\" && exit 0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "ai",
+    "risk-analysis",
+    "ollama",
+    "safety",
+    "code-analysis",
+    "security-scanner"
+  ],
+  "author": "Prompt Guard MCP Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dendroman/prompt-guard-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dendroman/prompt-guard-mcp/issues"
+  },
+  "homepage": "https://github.com/dendroman/prompt-guard-mcp#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "undici": "^7.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE.md"
+  ]
+}

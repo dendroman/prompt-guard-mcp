@@ -1,0 +1,32 @@
+# Source files
+src/
+tsconfig.json
+
+# Development files
+*.log
+.DS_Store
+.vscode/
+node_modules/
+
+# Test files
+tests/
+test-file.txt
+
+# Documentation that shouldn't be in package
+refactoring-*.md
+REFACTORING_PLAN.md
+IMPLEMENTATION.md
+instructions.md
+current-structure.txt
+phase-1-analysis-results.md
+PHASE-1-STATUS.md
+PHASE-2-STATUS.md
+prompt_injection_risks.md
+setup.sh
+
+# Build artifacts not needed
+*.tsbuildinfo
+
+# Git files
+.git/
+.gitignore
