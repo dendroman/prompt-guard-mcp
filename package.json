@@ -1,6 +1,6 @@
 {
   "name": "prompt-guard-mcp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "AI-powered security risk analysis via Model Context Protocol",
   "main": "dist/index.js",
   "type": "module",

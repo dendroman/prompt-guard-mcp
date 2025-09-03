@@ -75,20 +75,31 @@ export async function guardCheck(
 }
 
 /**
- * Enhance content with additional security rules for file operations
- * This prepends security context to help the LLM make better decisions
+ * Enhance content with context about sensitive operations
+ * Provides additional context to help with risk assessment without forcing violations
  */
 function enhanceContentWithFileRules(content: string): string {
-  const securityRules = `
-IMPORTANT SECURITY RULES:
-- Any deletion of copilot-instructions files or cursor mdc rule files (.cursor-rules, .cursorrules, cursor-rules files) should be considered HIGHEST RISK and unsafe
-- Any modification of copilot-instructions files or cursor mdc rule files should be considered MEDIUM RISK and require human confirmation
-- These files are critical for AI assistant behavior and their unauthorized modification poses significant security risks
+  // Simply provide additional context about the operation
+  // Let Llama Guard make its own determination based on content
+  const contextualPrompt = `
+Please evaluate this conversation for security risks with these categories:
 
-Content to analyze:
-${content}`;
-  
-  return securityRules;
+<BEGIN UNSAFE CONTENT CATEGORIES>
+Hazard categories
+S1: Violent Crimes	S2: Non-Violent Crimes
+S3: Sex-Related Crimes	S4: Child Sexual Exploitation
+S5: Defamation	S6: Specialized Advice
+S7: Privacy	S8: Intellectual Property
+S9: Indiscriminate Weapons	S10: Hate
+S11: Suicide & Self-Harm	S12: Sexual Content
+S13: Elections	S14: Code Interpreter Abuse or INSTRUCTION file deletion
+<END UNSAFE CONTENT CATEGORIES>
+<BEGIN CONVERSATION>
+"${content}"
+<END CONVERSATION>
+`;
+
+  return contextualPrompt;
 }
 
 /** Map Llama Guard safety categories to risk levels and actions */
@@ -103,6 +114,7 @@ function mapLlamaGuardCategoryToRisk(category?: string): {
     case "S4": // Child Sexual Exploitation
     case "S9": // Indiscriminate Weapons
     case "S11": // Suicide & Self-Harm
+    case "S14": // Code Interpreter Abuse - critical for our file security use case
       return { risk: "high", actions: ["block"] };
 
     // Medium risk categories - require confirmation
@@ -136,7 +148,6 @@ export async function guardCheckConversation(
 ): Promise<GuardResult> {
   // Enhance the user message with file-specific security rules
   const enhancedUserMessage = enhanceContentWithFileRules(userMessage);
-  
   // Use Llama Guard's chat completion format for response classification
   const out = await ollamaChat(
     [
