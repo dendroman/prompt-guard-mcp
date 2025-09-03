@@ -10,6 +10,8 @@ AI-powered security risk analysis via Model Context Protocol (MCP)
 
 Prompt Guard MCP is a security-focused MCP (Model Context Protocol) server that provides AI-powered risk analysis for operations and commands. It integrates with local Ollama models to evaluate potential security risks before operations are executed.
 
+This MCP server adds prompt injection protection by running all inputs through Llama Guard, a lightweight classifier for unsafe or malicious instructions. Since the OWASP Top 10 for LLMs ranks Prompt Injection (LLM01 https://genai.owasp.org/llmrisk/llm01-prompt-injection/) as the #1 threat to generative AI systems, this server provides an easy drop-in layer to detect risky prompts and help keep your LLM or agent workflows safe.
+
 ## Features
 
 - 🔍 **Risk Analysis**: AI-powered security risk assessment
