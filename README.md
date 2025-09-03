@@ -87,7 +87,7 @@ npx prompt-guard-mcp
          "command": "npx",
          "args": ["prompt-guard-mcp"],
          "env": {
-           "GUARD_MODEL": "llama-guard3:1b"
+           "GUARD_MODEL": "llama-guard3:8b"
          }
        }
      }
@@ -154,7 +154,7 @@ For development or advanced use cases, you may want additional environment varia
       "args": ["prompt-guard-mcp"],
       "env": {
         "GUARD_WORKSPACE_ROOT": ".",
-        "GUARD_MODEL": "llama-guard3:1b",
+        "GUARD_MODEL": "llama-guard3:8b",
         "GUARD_OLLAMA_URL": "http://localhost:11434"
       }
     }
@@ -297,7 +297,7 @@ Error: Model 'llama-guard3:8b' not found
 ```
 
 - Pull the model: `ollama pull llama-guard3:8b`
-- Or use a different model: `export GUARD_MODEL=llama-guard3:1b`
+- Or use a different model: `export GUARD_MODEL=llama-guard3:8b`
 
 **Permission Denied**
 
