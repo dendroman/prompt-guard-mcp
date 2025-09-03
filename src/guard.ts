@@ -14,13 +14,27 @@ export interface GuardResult {
   sanitized_prompt?: string;
 }
 
-export async function guardCheck(payload: unknown): Promise<GuardResult> {
+export interface GuardConfig {
+  model?: string;
+  ollamaUrl?: string;
+}
+
+export async function guardCheck(
+  payload: unknown,
+  config?: GuardConfig
+): Promise<GuardResult> {
   // Convert the payload to a readable string for Llama Guard analysis
   const content =
     typeof payload === "string" ? payload : JSON.stringify(payload);
 
-  // Use Llama Guard in its native format - no system prompt needed as it's pre-trained
-  const out = await ollamaChat([{ role: "user", content: content }]);
+  // Enhance the content with additional security rules for file operations
+  const enhancedContent = enhanceContentWithFileRules(content);
+
+  // Use Llama Guard with enhanced content that includes file-specific rules
+  const out = await ollamaChat([{ role: "user", content: enhancedContent }], {
+    model: config?.model,
+    url: config?.ollamaUrl,
+  });
 
   // Parse Llama Guard's native response format
   const lines = out.trim().split("\n");
@@ -58,6 +72,23 @@ export async function guardCheck(payload: unknown): Promise<GuardResult> {
     reasons: ["invalid_classifier_output"],
     actions: ["block"],
   };
+}
+
+/**
+ * Enhance content with additional security rules for file operations
+ * This prepends security context to help the LLM make better decisions
+ */
+function enhanceContentWithFileRules(content: string): string {
+  const securityRules = `
+IMPORTANT SECURITY RULES:
+- Any deletion of copilot-instructions files or cursor mdc rule files (.cursor-rules, .cursorrules, cursor-rules files) should be considered HIGHEST RISK and unsafe
+- Any modification of copilot-instructions files or cursor mdc rule files should be considered MEDIUM RISK and require human confirmation
+- These files are critical for AI assistant behavior and their unauthorized modification poses significant security risks
+
+Content to analyze:
+${content}`;
+  
+  return securityRules;
 }
 
 /** Map Llama Guard safety categories to risk levels and actions */
@@ -100,13 +131,23 @@ function mapLlamaGuardCategoryToRisk(category?: string): {
  */
 export async function guardCheckConversation(
   userMessage: string,
-  assistantResponse: string
+  assistantResponse: string,
+  config?: GuardConfig
 ): Promise<GuardResult> {
+  // Enhance the user message with file-specific security rules
+  const enhancedUserMessage = enhanceContentWithFileRules(userMessage);
+  
   // Use Llama Guard's chat completion format for response classification
-  const out = await ollamaChat([
-    { role: "user", content: userMessage },
-    { role: "assistant", content: assistantResponse },
-  ]);
+  const out = await ollamaChat(
+    [
+      { role: "user", content: enhancedUserMessage },
+      { role: "assistant", content: assistantResponse },
+    ],
+    {
+      model: config?.model,
+      url: config?.ollamaUrl,
+    }
+  );
 
   // Parse Llama Guard's response about the assistant message
   const lines = out.trim().split("\n");

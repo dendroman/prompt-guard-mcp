@@ -79,22 +79,28 @@ export async function createPromptGuardServer(): Promise<Server> {
     }
 
     try {
-      const guard = await guardCheck({
-        userPrompt: operation,
-        plan: {
-          edits:
-            context?.files?.map((f: string) => ({
-              path: f,
-              content: "",
-              operation: "replace_file" as const,
-            })) || [],
+      const guard = await guardCheck(
+        {
+          userPrompt: operation,
+          plan: {
+            edits:
+              context?.files?.map((f: string) => ({
+                path: f,
+                content: "",
+                operation: "replace_file" as const,
+              })) || [],
+          },
+          untrusted: [],
+          toolCall: {
+            name: context?.command ? "shell.run" : "fs.write",
+            args: context || {},
+          },
         },
-        untrusted: [],
-        toolCall: {
-          name: context?.command ? "shell.run" : "fs.write",
-          args: context || {},
-        },
-      });
+        {
+          model: config.model,
+          ollamaUrl: config.ollamaUrl,
+        }
+      );
 
       const result = {
         operation,
